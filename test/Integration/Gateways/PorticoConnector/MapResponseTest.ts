@@ -59,7 +59,6 @@ test("transaction duplicate", (t) => {
   }, DuplicateError);
 
   t.is(error.name, "DuplicateError");
-  t.is(error.responseCode, "2");
   t.truthy(error.additionalDuplicateData);
   t.is(error.additionalDuplicateData.originalGatewayTxnId, "1234567");
   t.is(error.additionalDuplicateData.originalRspDT, "2022-04-06T02:32:50.083");

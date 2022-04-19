@@ -49,7 +49,6 @@ import {
   UnsupportedTransactionError,
   PaxEntryMethod,
   DuplicateError,
-  AdditionalDuplicateData,
 } from "../";
 import { validateAmount, validateInput } from "../Utils/InputValidation";
 import { XmlGateway } from "./XmlGateway";
@@ -938,25 +937,24 @@ export class PorticoConnector extends XmlGateway implements IPaymentGateway {
     if (acceptedCodes.indexOf(gatewayRspCode) === -1) {
       if ("2" === gatewayRspCode && root.find(".//AdditionalDuplicateData")) {
         const result = root.find(".//AdditionalDuplicateData");
-        const additionalDuplicateData = new AdditionalDuplicateData();
-        additionalDuplicateData.originalGatewayTxnId = result.findtext(".//OriginalGatewayTxnId");
-        additionalDuplicateData.originalRspDT = result.findtext(".//OriginalRspDT");
-        additionalDuplicateData.originalAuthCode = result.findtext(".//OriginalAuthCode");
-        additionalDuplicateData.originalRefNbr = result.findtext(".//OriginalRefNbr");
-        additionalDuplicateData.originalAuthAmt = result.findtext(".//OriginalAuthAmt");
-        additionalDuplicateData.originalCardType = result.findtext(".//OriginalCardType");
-        additionalDuplicateData.originalCardNbrLast4 = result.findtext(".//OriginalCardNbrLast4");
+        const additionalDuplicateData = {
+          originalGatewayTxnId: result.findtext(".//OriginalGatewayTxnId"),
+          originalRspDT: result.findtext(".//OriginalRspDT"),
+          originalAuthCode: result.findtext(".//OriginalAuthCode"),
+          originalRefNbr: result.findtext(".//OriginalRefNbr"),
+          originalAuthAmt: result.findtext(".//OriginalAuthAmt"),
+          originalCardType: result.findtext(".//OriginalCardType"),
+          originalCardNbrLast4: result.findtext(".//OriginalCardNbrLast4"),
+        };
         throw new DuplicateError(
           `Transaction Duplicate exception: ${gatewayRspCode} - ${gatewayRspText}`,
-          gatewayRspCode,
-          gatewayRspText,
           additionalDuplicateData,
-        );
-      } else {
-        throw new GatewayError(
-          `Unexpected Gateway Response: ${gatewayRspCode} - ${gatewayRspText}`,
+          true,
         );
       }
+      throw new GatewayError(
+        `Unexpected Gateway Response: ${gatewayRspCode} - ${gatewayRspText}`,
+      );
     }
 
     result.responseCode = root.findtext(".//RspCode")

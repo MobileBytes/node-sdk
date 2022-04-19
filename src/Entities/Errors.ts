@@ -70,26 +70,21 @@ export class UnsupportedTransactionError extends ApiError {
 }
 
 export class DuplicateError extends ApiError {
-  public responseCode: string;
-  public responseMessage: string;
   public additionalDuplicateData: AdditionalDuplicateData;
+  public isDuplicateTransactionError: boolean = false;
   constructor(
     m?: string,
-    code?: string,
-    message?: string,
     additionalDuplicateData?: AdditionalDuplicateData,
+    isDuplicateTransactionError?: boolean,
   ) {
     super(m);
     Object.setPrototypeOf(this, DuplicateError.prototype);
     this.name = this.constructor.name;
-    if (code) {
-      this.responseCode = code;
-    }
-    if (message) {
-      this.responseMessage = message;
-    }
     if (additionalDuplicateData) {
       this.additionalDuplicateData = additionalDuplicateData;
+    }
+    if (isDuplicateTransactionError) {
+      this.isDuplicateTransactionError = isDuplicateTransactionError;
     }
   }
 }
