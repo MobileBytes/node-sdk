@@ -948,8 +948,7 @@ export class PorticoConnector extends XmlGateway implements IPaymentGateway {
         };
         throw new DuplicateError(
           `Transaction Duplicate exception: ${gatewayRspCode} - ${gatewayRspText}`,
-          additionalDuplicateData,
-          true,
+          additionalDuplicateData
         );
       }
       throw new GatewayError(
