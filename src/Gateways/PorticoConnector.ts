@@ -47,7 +47,8 @@ import {
   TransactionSummary,
   TransactionType,
   UnsupportedTransactionError,
-  PaxEntryMethod
+  PaxEntryMethod,
+  DuplicateError,
 } from "../";
 import { validateAmount, validateInput } from "../Utils/InputValidation";
 import { XmlGateway } from "./XmlGateway";
@@ -935,6 +936,22 @@ export class PorticoConnector extends XmlGateway implements IPaymentGateway {
     const gatewayRspText = root.findtext(".//GatewayRspMsg");
 
     if (acceptedCodes.indexOf(gatewayRspCode) === -1) {
+      if ("2" === gatewayRspCode && root.find(".//AdditionalDuplicateData")) {
+        const result = root.find(".//AdditionalDuplicateData");
+        const additionalDuplicateData = {
+          originalGatewayTxnId: result.findtext(".//OriginalGatewayTxnId"),
+          originalRspDT: result.findtext(".//OriginalRspDT"),
+          originalAuthCode: result.findtext(".//OriginalAuthCode"),
+          originalRefNbr: result.findtext(".//OriginalRefNbr"),
+          originalAuthAmt: result.findtext(".//OriginalAuthAmt"),
+          originalCardType: result.findtext(".//OriginalCardType"),
+          originalCardNbrLast4: result.findtext(".//OriginalCardNbrLast4"),
+        };
+        throw new DuplicateError(
+          `Transaction Duplicate exception: ${gatewayRspCode} - ${gatewayRspText}`,
+          additionalDuplicateData
+        );
+      }
       throw new GatewayError(
         `Unexpected Gateway Response: ${gatewayRspCode} - ${gatewayRspText}`,
       );

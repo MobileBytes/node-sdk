@@ -1,5 +1,7 @@
 // tslint:disable:max-classes-per-file
 
+import { AdditionalDuplicateData } from "./AdditionalDuplicateData";
+
 export class ApiError extends Error {
   constructor(m?: string) {
     super(m);
@@ -64,5 +66,20 @@ export class UnsupportedTransactionError extends ApiError {
     super(m);
     Object.setPrototypeOf(this, UnsupportedTransactionError.prototype);
     this.name = this.constructor.name;
+  }
+}
+
+export class DuplicateError extends ApiError {
+  public additionalDuplicateData: AdditionalDuplicateData;
+  constructor(
+    m?: string,
+    additionalDuplicateData?: AdditionalDuplicateData,
+  ) {
+    super(m);
+    Object.setPrototypeOf(this, DuplicateError.prototype);
+    this.name = this.constructor.name;
+    if (additionalDuplicateData) {
+      this.additionalDuplicateData = additionalDuplicateData;
+    }
   }
 }
