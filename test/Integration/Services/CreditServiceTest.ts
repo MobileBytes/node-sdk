@@ -215,3 +215,28 @@ test("reverse by client transaction ID", async (t) => {
   t.truthy(voidResponse);
   t.is(voidResponse.responseCode, "00");
 });
+
+test("unique token", async (t) => {
+  const firstResponse = await service
+      .verify()
+      .withCurrency("USD")
+      .withPaymentMethod(card)
+      .withRequestMultiUseToken(true)
+      .withUseUniqueToken(true)
+      .execute();
+  t.truthy(firstResponse);
+  t.truthy(firstResponse.token);
+  t.is(firstResponse.responseCode, "00");
+
+  const secondlyResponse = await service
+      .verify()
+      .withCurrency("USD")
+      .withPaymentMethod(card)
+      .withRequestMultiUseToken(true)
+      .withUseUniqueToken(true)
+      .execute();
+  t.truthy(secondlyResponse);
+  t.truthy(secondlyResponse.token);
+  t.is(secondlyResponse.responseCode, "00");
+  t.not(firstResponse.token,secondlyResponse.token)
+});

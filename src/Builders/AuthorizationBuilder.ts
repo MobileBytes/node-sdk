@@ -55,6 +55,7 @@ export class AuthorizationBuilder extends TransactionBuilder<Transaction> {
   public scheduleId: string;
   public shippingAddress: Address;
   public timestamp: string;
+  public useUniqueToken: boolean;
 
   public constructor(type: number, paymentMethod?: IPaymentMethod) {
     super(type, paymentMethod);
@@ -640,6 +641,13 @@ export class AuthorizationBuilder extends TransactionBuilder<Transaction> {
   public withReplacementCard(replacementCard?: GiftCard) {
     if (replacementCard !== undefined) {
       this.replacementCard = replacementCard;
+    }
+    return this;
+  }
+
+  public withUseUniqueToken(useUniqueToken?: boolean) {
+    if (useUniqueToken !== undefined) {
+      this.useUniqueToken = useUniqueToken;
     }
     return this;
   }
