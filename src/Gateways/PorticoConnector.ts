@@ -49,6 +49,7 @@ import {
   UnsupportedTransactionError,
   PaxEntryMethod,
   DuplicateError,
+  cardTypeCode
 } from "../";
 import { validateAmount, validateInput } from "../Utils/InputValidation";
 import { XmlGateway } from "./XmlGateway";
@@ -1397,6 +1398,10 @@ export class PorticoConnector extends XmlGateway implements IPaymentGateway {
     result.responseMessage = root.findtext('.//RspText');
     result.maskedCardNumber = root.findtext('.//MaskedCardNbr');
     result.cardType = root.findtext('.//CardType');
+
+    if(result.cardType.toUpperCase() === "MC"){
+      result.cardType = cardTypeCode.Mastercard;
+    }
     result.surchargeAmountInfo = root.findtext('.//SurchargeAmtInfo');
     result.globalUID = root.findtext('.//x_global_transaction_id');
 
