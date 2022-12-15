@@ -253,3 +253,7 @@ export enum TransactionType {
   Hold = 1 << 22,
   Release = 1 << 23,
 }
+
+export enum cardTypeCode {
+  Mastercard='02'
+}
