@@ -1,0 +1,47 @@
+name: Publish on merge with main
+on:
+  push:
+    branches: [main]
+    paths-ignore:
+      - README.md
+jobs:
+  publish-main:
+    name: Publish main branch
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository code
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-node@v3
+        with:
+          node-version: "latest"
+          cache: "yarn"
+          cache-dependency-path: app/yarn.lock
+          registry-url: "https://registry.npmjs.org"
+          scope: "hrpos"
+
+      - name: Install dependancies prior to build
+        run: yarn
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.REST_NPM_HRPOS_TOKEN }}
+
+      - name: Bump version tag
+        id: tag_version
+        uses: mathieudutour/github-tag-action@v6.0
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Update package version
+        uses: reedyuk/npm-version@1.1.1
+        with:
+          version: ${{ steps.tag_version.outputs.new_version }}
+
+      - name: Build
+        run: yarn build
+
+      - name: Publish
+        run: yarn publish lib/
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.REST_NPM_HRPOS_TOKEN }}
