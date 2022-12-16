@@ -1,12 +1,12 @@
 name: Publish on merge with main
 on:
   push:
-    branches: [main]
+    branches: [master]
     paths-ignore:
       - README.md
 jobs:
   publish-main:
-    name: Publish main branch
+    name: Publish master branch
     runs-on: ubuntu-latest
     steps:
       - name: Check out repository code
