@@ -1,5 +1,5 @@
 {
-  "name": "@mobilebytes/globalpayments-api",
+  "name": "@hrpos/globalpayments-api",
   "version": "1.7.3",
   "description": "Global Payments SDK for NodeJS for Heartland and Global Payments eCommerce gateways",
   "author": "Heartland Payment Systems",
