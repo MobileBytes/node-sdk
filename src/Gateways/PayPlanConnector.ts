@@ -639,8 +639,7 @@ export class PayPlanConnector extends RestGateway implements IRecurringService {
   }
 
   protected setAuthorizationHeader(value: string) {
-    const buffer = (Buffer.from ? Buffer.from(value) : new Buffer(value));
-    const auth = `Basic ${buffer.toString("base64")}`;
+    const auth = `Basic ${StringUtils.btoa(value)}`;
     this.headers[RestGateway.AUTHORIZATION_HEADER] = auth;
   }
 

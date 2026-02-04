@@ -1,3 +1,5 @@
+import { decode as base64Decode, encode as base64Encode } from "base-64";
+
 export class StringUtils {
   public static leftPad(
     source: string,
@@ -38,18 +40,18 @@ export class StringUtils {
   }
 
   public static btoa(t: string) {
-    if (Buffer.from) {
-      return Buffer.from(t, "ascii").toString("base64");
+    if (typeof btoa === "function") {
+      return btoa(t);
     }
 
-    return new Buffer(t, "ascii").toString("base64");
+    return base64Encode(t);
   }
 
   public static atob(t: string) {
-    if (Buffer.from) {
-      return Buffer.from(t, "base64").toString("ascii");
+    if (typeof atob === "function") {
+      return atob(t);
     }
 
-    return new Buffer(t, "base64").toString("ascii");
+    return base64Decode(t);
   }
 }

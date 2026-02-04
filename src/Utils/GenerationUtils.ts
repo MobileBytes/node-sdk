@@ -26,8 +26,7 @@ export class GenerationUtils {
 
   public static generateOrderId(): string {
     const id = StringUtils.uuid();
-    return Buffer.from(id, "ascii")
-      .toString("base64")
+    return StringUtils.btoa(id)
       .replace("=", "")
       .replace("+", "-")
       .replace("/", "_");
