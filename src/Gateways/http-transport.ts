@@ -14,17 +14,26 @@ const isReactNative = (): boolean => {
   return typeof navigator !== "undefined" && (navigator as any).product === "ReactNative";
 };
 
-let nodeHttps: any;
-try {
-  if (typeof process !== "undefined" && process.versions && process.versions.node) {
-    // tslint:disable-next-line:no-var-requires
-    nodeHttps = require("https");
+// Lazy load https module only when needed (avoids Metro static analysis)
+const getNodeHttps = (): any => {
+  if (isReactNative()) {
+    return undefined;
   }
-} catch (_e) {
-  nodeHttps = undefined;
-}
+  try {
+    if (typeof process !== "undefined" && process.versions && process.versions.node) {
+      // Dynamic require to avoid Metro bundler static analysis
+      // tslint:disable-next-line:no-var-requires
+      const mod = "https";
+      return require(mod);
+    }
+  } catch (_e) {
+    // Not in Node.js environment
+  }
+  return undefined;
+};
 
 const nodeTransport: Transport = (url, data, options) => {
+  const nodeHttps = getNodeHttps();
   return new Promise((resolve, reject) => {
     let parsed: any;
     try {
@@ -108,8 +117,11 @@ const reactNativeTransport: Transport = async (url, data, options) => {
 };
 
 export const request: Transport = (url, data, options) => {
-  if (nodeHttps && !isReactNative()) {
-    return nodeTransport(url, data, options);
+  if (!isReactNative()) {
+    const nodeHttps = getNodeHttps();
+    if (nodeHttps) {
+      return nodeTransport(url, data, options);
+    }
   }
   if (isReactNative()) {
     return reactNativeTransport(url, data, options);
