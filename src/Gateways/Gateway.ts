@@ -1,8 +1,5 @@
-import { RequestOptions } from "https";
-import * as url from "url";
-
 import { IDictionary } from "../Builders";
-import { request } from "./https-wrapper";
+import { request, RequestOptions } from "./http-transport";
 
 export abstract class Gateway {
   public headers: IDictionary<string>;
@@ -22,23 +19,15 @@ export abstract class Gateway {
     data?: string,
     queryStringParams?: IDictionary<string>,
   ) {
-    const uri = url.parse(this.serviceUrl);
     const queryString = this.buildQueryString(queryStringParams);
+    const url = new URL(endpoint + queryString, this.serviceUrl);
     const options: RequestOptions = {
       headers: this.headers,
-      host: uri.host,
       method: httpMethod,
-      path: uri.path + endpoint + queryString,
-      port: uri.port ? parseInt(uri.port, 10) : 443,
+      timeoutMs: this.timeout,
     };
 
-    if (data !== undefined && options && options.headers) {
-      options.headers["Content-Length"] = data.length;
-    }
-
-    console.log("Request: ", data)
-
-    return request(data, options);
+    return request(url.toString(), data, options);
   }
 
   protected buildQueryString(queryStringParams?: IDictionary<string>) {
