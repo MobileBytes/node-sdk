@@ -1,5 +1,8 @@
 import { ApiError, GatewayError } from "../Entities/Errors";
 
+// tslint:disable-next-line:no-var-requires
+const https = require("https");
+
 export interface RequestOptions {
   headers?: { [key: string]: any };
   method?: string;
@@ -10,30 +13,8 @@ const DEFAULT_TIMEOUT = 100000;
 
 export type Transport = (url: string, data?: string, options?: RequestOptions) => Promise<string>;
 
-const isReactNative = (): boolean => {
-  return typeof navigator !== "undefined" && (navigator as any).product === "ReactNative";
-};
-
-// Lazy load https module only when needed (avoids Metro static analysis)
-const getNodeHttps = (): any => {
-  if (isReactNative()) {
-    return undefined;
-  }
-  try {
-    if (typeof process !== "undefined" && process.versions && process.versions.node) {
-      // Dynamic require to avoid Metro bundler static analysis
-      // tslint:disable-next-line:no-var-requires
-      const mod = "https";
-      return require(mod);
-    }
-  } catch (_e) {
-    // Not in Node.js environment
-  }
-  return undefined;
-};
-
-const nodeTransport: Transport = (url, data, options) => {
-  const nodeHttps = getNodeHttps();
+// Node.js transport using native https module
+export const request: Transport = (url, data, options) => {
   return new Promise((resolve, reject) => {
     let parsed: any;
     try {
@@ -57,7 +38,7 @@ const nodeTransport: Transport = (url, data, options) => {
       path: parsed.pathname + parsed.search,
     };
 
-    const req = nodeHttps.request(reqOptions, (res: any) => {
+    const req = https.request(reqOptions, (res: any) => {
       let responseData = "";
       res.on("data", (chunk: any) => {
         responseData += chunk.toString();
@@ -87,44 +68,4 @@ const nodeTransport: Transport = (url, data, options) => {
     }
     req.end();
   });
-};
-
-const reactNativeTransport: Transport = async (url, data, options) => {
-  const timeoutMs = (options && options.timeoutMs) || DEFAULT_TIMEOUT;
-  
-  const timeoutPromise = new Promise<never>((_, reject) => {
-    setTimeout(() => reject(new ApiError("Request timeout occurred.")), timeoutMs);
-  });
-
-  try {
-    const response = await Promise.race([
-      fetch(url, {
-        method: (options && options.method) || "GET",
-        headers: options && options.headers,
-        body: data,
-      }),
-      timeoutPromise
-    ]);
-
-    if (response.status < 200 || response.status >= 300) {
-      throw new GatewayError(`Unexpected HTTP status code [${response.status}]`);
-    }
-
-    return await response.text();
-  } catch (error) {
-    throw error;
-  }
-};
-
-export const request: Transport = (url, data, options) => {
-  if (!isReactNative()) {
-    const nodeHttps = getNodeHttps();
-    if (nodeHttps) {
-      return nodeTransport(url, data, options);
-    }
-  }
-  if (isReactNative()) {
-    return reactNativeTransport(url, data, options);
-  }
-  throw new ApiError("No HTTP transport available for this environment.");
 };
