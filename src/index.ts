@@ -1,4 +1,8 @@
-if (process.env.GP_NETSUITE_BUILD) {
+if (
+  typeof process !== "undefined" &&
+  process.env &&
+  process.env.GP_NETSUITE_BUILD
+) {
   // tslint:disable-next-line
   require("../netsuite/set-timeout-polyfill");
 }

@@ -8,28 +8,39 @@ export interface RequestOptions {
 
 const DEFAULT_TIMEOUT = 100000;
 
-export type Transport = (url: string, data?: string, options?: RequestOptions) => Promise<string>;
+export type Transport = (
+  url: string,
+  data?: string,
+  options?: RequestOptions,
+) => Promise<string>;
 
 // React Native transport using fetch API
 export const request: Transport = async (url, data, options) => {
   const timeoutMs = (options && options.timeoutMs) || DEFAULT_TIMEOUT;
-  
+
+  const normalizedUrl = url.replace(/\/+$/, "");
+
   const timeoutPromise = new Promise<never>((_, reject) => {
-    setTimeout(() => reject(new ApiError("Request timeout occurred.")), timeoutMs);
+    setTimeout(
+      () => reject(new ApiError("Request timeout occurred.")),
+      timeoutMs,
+    );
   });
 
   try {
     const response = await Promise.race([
-      fetch(url, {
+      fetch(normalizedUrl, {
         method: (options && options.method) || "GET",
         headers: options && options.headers,
         body: data,
       }),
-      timeoutPromise
+      timeoutPromise,
     ]);
 
     if (response.status < 200 || response.status >= 300) {
-      throw new GatewayError(`Unexpected HTTP status code [${response.status}]`);
+      throw new GatewayError(
+        `Unexpected HTTP status code [${response.status}]`,
+      );
     }
 
     return await response.text();
