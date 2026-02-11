@@ -20,31 +20,30 @@ export const request: Transport = async (url, data, options) => {
 
   const normalizedUrl = url.replace(/\/+$/, "");
 
+  let timeoutId;
   const timeoutPromise = new Promise<never>((_, reject) => {
-    setTimeout(
+    timeoutId = setTimeout(
       () => reject(new ApiError("Request timeout occurred.")),
       timeoutMs,
     );
   });
 
-  try {
-    const response = await Promise.race([
-      fetch(normalizedUrl, {
-        method: (options && options.method) || "GET",
-        headers: options && options.headers,
-        body: data,
-      }),
-      timeoutPromise,
-    ]);
+  const response = await Promise.race([
+    fetch(normalizedUrl, {
+      method: (options && options.method) || "GET",
+      headers: options && options.headers,
+      body: data,
+    }),
+    timeoutPromise,
+  ]);
 
-    if (response.status < 200 || response.status >= 300) {
-      throw new GatewayError(
-        `Unexpected HTTP status code [${response.status}]`,
-      );
-    }
+  clearTimeout(timeoutId);
 
-    return await response.text();
-  } catch (error) {
-    throw error;
+  if (response.status < 200 || response.status >= 300) {
+    throw new GatewayError(
+      `Unexpected HTTP status code [${response.status}]`,
+    );
   }
+
+  return await response.text();
 };

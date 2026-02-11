@@ -50,6 +50,7 @@ export const request: Transport = (url, data, options) => {
         }
         resolve(responseData);
       });
+      res.on("error", reject);
     });
 
     const timeoutMs = (options && options.timeoutMs) || DEFAULT_TIMEOUT;
