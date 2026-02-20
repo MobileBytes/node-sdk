@@ -20,7 +20,7 @@ export const request: Transport = async (url, data, options) => {
 
   const normalizedUrl = url.replace(/\/+$/, "");
 
-  let timeoutId;
+  let timeoutId: NodeJS.Timer | undefined;
   const timeoutPromise = new Promise<never>((_, reject) => {
     timeoutId = setTimeout(
       () => reject(new ApiError("Request timeout occurred.")),
@@ -37,12 +37,12 @@ export const request: Transport = async (url, data, options) => {
     timeoutPromise,
   ]);
 
-  clearTimeout(timeoutId);
+  if (timeoutId !== undefined) {
+    clearTimeout(timeoutId);
+  }
 
   if (response.status < 200 || response.status >= 300) {
-    throw new GatewayError(
-      `Unexpected HTTP status code [${response.status}]`,
-    );
+    throw new GatewayError(`Unexpected HTTP status code [${response.status}]`);
   }
 
   return await response.text();
