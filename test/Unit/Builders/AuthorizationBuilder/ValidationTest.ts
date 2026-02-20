@@ -1,6 +1,5 @@
 import test from "ava";
 import {
-  ArgumentError,
   CreditCardData,
   ECheck,
   GiftCard,
@@ -21,136 +20,147 @@ card.expYear = "2025";
 card.cvn = "123";
 card.cardHolderName = "Joe Smith";
 
+const captureError = async (fn: () => Promise<any>) => {
+  try {
+    await fn();
+    return null;
+  } catch (err) {
+    return err as Error;
+  }
+};
+
 test.before((_t) => {
   ServicesContainer.configure(config);
 });
 
-test("credit auth no amount", (t) => {
+test("credit auth no amount", async (t) => {
   t.plan(3);
 
-  const error = t.throws(() => {
-    return card.authorize().execute();
-  }, ArgumentError);
+  const error = await captureError(() => card.authorize().execute());
 
-  t.is(error.name, "ArgumentError");
-  t.true(-1 !== error.message.indexOf("amount cannot be null"));
+  t.truthy(error);
+  t.is(error!.name, "BuilderError");
+  t.true(-1 !== error!.message.indexOf("amount cannot be null"));
 });
 
-test("credit auth no currency", (t) => {
+test("credit auth no currency", async (t) => {
   t.plan(3);
 
-  const error = t.throws(() => {
-    return card.authorize(14).execute();
-  }, ArgumentError);
+  const error = await captureError(() => card.authorize(14).execute());
 
-  t.is(error.name, "ArgumentError");
-  t.true(-1 !== error.message.indexOf("currency cannot be null"));
+  t.truthy(error);
+  t.is(error!.name, "BuilderError");
+  t.true(-1 !== error!.message.indexOf("currency cannot be null"));
 });
 
-test("credit sale no amount", (t) => {
+test("credit sale no amount", async (t) => {
   t.plan(3);
 
-  const error = t.throws(() => {
-    return card.charge().execute();
-  }, ArgumentError);
+  const error = await captureError(() => card.charge().execute());
 
-  t.is(error.name, "ArgumentError");
-  t.true(-1 !== error.message.indexOf("amount cannot be null"));
+  t.truthy(error);
+  t.is(error!.name, "BuilderError");
+  t.true(-1 !== error!.message.indexOf("amount cannot be null"));
 });
 
-test("credit sale no currency", (t) => {
+test("credit sale no currency", async (t) => {
   t.plan(3);
 
-  const error = t.throws(() => {
-    return card.charge(14).execute();
-  }, ArgumentError);
+  const error = await captureError(() => card.charge(14).execute());
 
-  t.is(error.name, "ArgumentError");
-  t.true(-1 !== error.message.indexOf("currency cannot be null"));
+  t.truthy(error);
+  t.is(error!.name, "BuilderError");
+  t.true(-1 !== error!.message.indexOf("currency cannot be null"));
 });
 
-test("credit sale no payment method", (t) => {
+test("credit sale no payment method", async (t) => {
   t.plan(3);
 
-  const error = t.throws(() => {
-    return card
+  const error = await captureError(() =>
+    card
       .charge(14)
       .withCurrency("USD")
       .withPaymentMethod({} as PaymentMethod)
-      .execute();
-  }, UnsupportedTransactionError);
+      .execute(),
+  );
 
-  t.is(error.name, "UnsupportedTransactionError");
-  t.true(-1 !== error.message.indexOf("not supported for this payment method"));
+  t.true(error instanceof UnsupportedTransactionError);
+  t.is(error!.name, "UnsupportedTransactionError");
+  t.true(-1 !== error!.message.indexOf("not supported for this payment method"));
 });
 
-test("credit offline no amount", (t) => {
+test("credit offline no amount", async (t) => {
   t.plan(3);
 
-  const error = t.throws(() => {
-    return card
+  const error = await captureError(() =>
+    card
       .charge()
       .withOfflineAuthCode("123456")
-      .execute();
-  }, ArgumentError);
+      .execute(),
+  );
 
-  t.is(error.name, "ArgumentError");
-  t.true(-1 !== error.message.indexOf("amount cannot be null"));
+  t.truthy(error);
+  t.is(error!.name, "BuilderError");
+  t.true(-1 !== error!.message.indexOf("amount cannot be null"));
 });
 
-test("credit offline no currency", (t) => {
+test("credit offline no currency", async (t) => {
   t.plan(3);
 
-  const error = t.throws(() => {
-    return card
+  const error = await captureError(() =>
+    card
       .charge(14)
       .withOfflineAuthCode("123456")
-      .execute();
-  }, ArgumentError);
+      .execute(),
+  );
 
-  t.is(error.name, "ArgumentError");
-  t.true(-1 !== error.message.indexOf("currency cannot be null"));
+  t.truthy(error);
+  t.is(error!.name, "BuilderError");
+  t.true(-1 !== error!.message.indexOf("currency cannot be null"));
 });
 
-test("credit offline no auth code", (t) => {
+test("credit offline no auth code", async (t) => {
   t.plan(3);
 
-  const error = t.throws(() => {
-    return card
+  const error = await captureError(() =>
+    card
       .charge(14)
       .withCurrency("USD")
       .withOfflineAuthCode("")
-      .execute();
-  }, ArgumentError);
+      .execute(),
+  );
 
-  t.is(error.name, "ArgumentError");
-  t.true(-1 !== error.message.indexOf("offlineAuthCode cannot be empty"));
+  t.truthy(error);
+  t.is(error!.name, "BuilderError");
+  t.true(-1 !== error!.message.indexOf("offlineAuthCode cannot be empty"));
 });
 
-test("gift replace no replacement card", (t) => {
+test("gift replace no replacement card", async (t) => {
   t.plan(3);
 
-  const error = t.throws(() => {
+  const error = await captureError(() => {
     const gift = new GiftCard();
     gift.alias = "1234567890";
     return gift.replaceWith(undefined).execute();
-  }, ArgumentError);
+  });
 
-  t.is(error.name, "ArgumentError");
-  t.true(-1 !== error.message.indexOf("replacementCard cannot be null"));
+  t.truthy(error);
+  t.is(error!.name, "BuilderError");
+  t.true(-1 !== error!.message.indexOf("replacementCard cannot be null"));
 });
 
 test("check sale no address", async (t) => {
   t.plan(3);
 
-  const error = await t.throws(() => {
+  const error = await captureError(() => {
     const check = new ECheck();
     return check
       .charge(14)
       .withCurrency("USD")
       .execute();
-  }, ArgumentError);
+  });
 
-  t.is(error.name, "ArgumentError");
-  t.true(-1 !== error.message.indexOf("billingAddress cannot be null"));
+  t.truthy(error);
+  t.is(error!.name, "BuilderError");
+  t.true(-1 !== error!.message.indexOf("billingAddress cannot be null"));
 });
