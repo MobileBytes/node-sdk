@@ -6,7 +6,7 @@ export interface IInputTypeLengths {
   phoneNumber: number;
   postalCode: number;
   province: number;
-};
+}
 
 export type GatewayType = "portico" | "realex";
 
@@ -50,17 +50,28 @@ const inputLabels: IInputLabels = {
   province: "State/province",
 };
 
-const inputLengthErrorMessage = (label: string) => `${label} length greater than the configured gateway's maximum length`;
+const inputLengthErrorMessage = (label: string) =>
+  `${label} length greater than the configured gateway's maximum length`;
 
-export function validateAmount(_gateway: GatewayType, amount: string | number, _impliedDecimal = false): string {
+export function validateAmount(
+  _gateway: GatewayType,
+  amount: string | number,
+  _impliedDecimal = false,
+): string {
   if (!amount || amount < 0) {
     throw new Error("Amount must be greater than or equal to 0");
   }
 
-  return parseFloat((Math.round((amount as number) * 100) / 100).toString()).toFixed(2);
+  return parseFloat(
+    (Math.round((amount as number) * 100) / 100).toString(),
+  ).toFixed(2);
 }
 
-export function validateInput(gateway: GatewayType, inputType: keyof IInputTypeLengths, input: string | undefined): string {
+export function validateInput(
+  gateway: GatewayType,
+  inputType: keyof IInputTypeLengths,
+  input: string | undefined,
+): string {
   if (!input) {
     return "";
   }

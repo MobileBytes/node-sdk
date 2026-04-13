@@ -59,8 +59,11 @@ export class ServicesContainer {
       payplan.developerId = config.developerId;
       payplan.versionNumber = config.versionNumber;
       payplan.timeout = config.timeout;
-      payplan.serviceUrl = config.serviceUrl
-        + (config.serviceUrl.indexOf('cert.') ? "/Portico.PayPlan.v2/" : "/payplan.v2/");
+      payplan.serviceUrl =
+        config.serviceUrl +
+        (config.serviceUrl.indexOf("cert.")
+          ? "/Portico.PayPlan.v2/"
+          : "/payplan.v2/");
       ServicesContainer._instance = new ServicesContainer(gateway, payplan);
     }
   }

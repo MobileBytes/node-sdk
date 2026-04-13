@@ -86,7 +86,9 @@ test("credit sale no payment method", async (t) => {
 
   t.true(error instanceof UnsupportedTransactionError);
   t.is(error!.name, "UnsupportedTransactionError");
-  t.true(-1 !== error!.message.indexOf("not supported for this payment method"));
+  t.true(
+    -1 !== error!.message.indexOf("not supported for this payment method"),
+  );
 });
 
 test("credit offline no amount", async (t) => {

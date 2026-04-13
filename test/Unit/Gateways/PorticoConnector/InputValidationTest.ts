@@ -18,7 +18,6 @@ card.cvn = "123";
 card.cardHolderName = "Joe Smith";
 
 test.before((_t) => {
-
   ServicesContainer.configure(config);
 });
 
@@ -26,7 +25,8 @@ test("correctable postal code - hyphen", async (t) => {
   const address = new Address();
   address.postalCode = "12345-6789";
 
-  const response = await card.charge(10)
+  const response = await card
+    .charge(10)
     .withCurrency("USD")
     .withAddress(address)
     .withAllowDuplicates(true)
@@ -40,7 +40,8 @@ test("correctable postal code - space", async (t) => {
   const address = new Address();
   address.postalCode = "12345 6789";
 
-  const response = await card.charge(10)
+  const response = await card
+    .charge(10)
     .withCurrency("USD")
     .withAddress(address)
     .withAllowDuplicates(true)
@@ -55,7 +56,8 @@ test("invalid postal code - length", async (t) => {
   address.postalCode = "1234567890";
 
   const error = t.throws(() => {
-    return card.charge(10)
+    return card
+      .charge(10)
       .withCurrency("USD")
       .withAddress(address)
       .withAllowDuplicates(true)
@@ -76,7 +78,8 @@ test("invalid city - length", async (t) => {
   address.city = "abcdefghijklmnopqrstuvwxyz";
 
   const error = t.throws(() => {
-    return card.charge(10)
+    return card
+      .charge(10)
       .withCurrency("USD")
       .withAddress(address)
       .withAllowDuplicates(true)
@@ -97,7 +100,8 @@ test("invalid state - length", async (t) => {
   address.state = "abcdefghijklmnopqrstuvwxyz";
 
   const error = t.throws(() => {
-    return card.charge(10)
+    return card
+      .charge(10)
       .withCurrency("USD")
       .withAddress(address)
       .withAllowDuplicates(true)
@@ -122,7 +126,8 @@ test("invalid first name - length", async (t) => {
   c.cardHolderName = "abcdefghijklmnopqrstuvwxyza smith";
 
   const error = t.throws(() => {
-    return c.charge(10)
+    return c
+      .charge(10)
       .withCurrency("USD")
       .withAllowDuplicates(true)
       .execute();
@@ -146,7 +151,8 @@ test("invalid last name - length", async (t) => {
   c.cardHolderName = "john abcdefghijklmnopqrstuvwxyza";
 
   const error = t.throws(() => {
-    return c.charge(10)
+    return c
+      .charge(10)
       .withCurrency("USD")
       .withAllowDuplicates(true)
       .execute();

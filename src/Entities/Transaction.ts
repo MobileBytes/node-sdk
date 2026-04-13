@@ -6,7 +6,7 @@ import {
   TransactionModifier,
   TransactionReference,
   TransactionType,
-  CreditCardData
+  CreditCardData,
 } from "../";
 
 export class Transaction {

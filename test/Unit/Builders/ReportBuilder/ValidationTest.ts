@@ -1,5 +1,9 @@
 import test from "ava";
-import { ReportingService, ServicesConfig, ServicesContainer } from "../../../../src/";
+import {
+  ReportingService,
+  ServicesConfig,
+  ServicesContainer,
+} from "../../../../src/";
 
 const config = new ServicesConfig();
 config.secretApiKey = "skapi_cert_MTeSAQAfG1UA9qQDrzl-kz4toXvARyieptFwSKP24w";

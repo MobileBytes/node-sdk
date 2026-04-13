@@ -71,10 +71,7 @@ export class UnsupportedTransactionError extends ApiError {
 
 export class DuplicateError extends ApiError {
   public additionalDuplicateData: AdditionalDuplicateData;
-  constructor(
-    m?: string,
-    additionalDuplicateData?: AdditionalDuplicateData,
-  ) {
+  constructor(m?: string, additionalDuplicateData?: AdditionalDuplicateData) {
     super(m);
     Object.setPrototypeOf(this, DuplicateError.prototype);
     this.name = this.constructor.name;

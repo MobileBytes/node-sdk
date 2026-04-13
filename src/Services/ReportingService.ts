@@ -1,4 +1,12 @@
-import { ReportType, TransactionReportBuilder, BatchHistoryReportBuilder, TransactionSummary, BatchHistory, Transaction, FindTransactionsBuilder } from "../";
+import {
+  ReportType,
+  TransactionReportBuilder,
+  BatchHistoryReportBuilder,
+  TransactionSummary,
+  BatchHistory,
+  Transaction,
+  FindTransactionsBuilder,
+} from "../";
 
 export class ReportingService {
   public static activity(): TransactionReportBuilder<TransactionSummary[]> {
@@ -22,7 +30,7 @@ export class ReportingService {
   }
 
   public static findTransactions(
-    clientTransactionId: string
+    clientTransactionId: string,
   ): FindTransactionsBuilder<Transaction[]> {
     return new FindTransactionsBuilder<Transaction[]>(
       ReportType.FindTransactions,

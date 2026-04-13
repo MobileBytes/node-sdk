@@ -10,29 +10,29 @@ This SDK makes it easy to integrate your Node.js application with our Card Not P
 
 ### General / Omnichannel
 
-* API Payment Processing
-* Apple Pay & Google Pay
-* Secure Card Storage & Customer Management
-* Subscriptions / Recurring Billing Solutions
-* Credit, Debit, Gift & Loyalty, and eCheck/ACH
+- API Payment Processing
+- Apple Pay & Google Pay
+- Secure Card Storage & Customer Management
+- Subscriptions / Recurring Billing Solutions
+- Credit, Debit, Gift & Loyalty, and eCheck/ACH
 
 ### Card Not Present (Ecommerce & MOTO) Specific
 
-* Minimize PCI compliance requirements with Hosted Payment Solutions
-* 140+ Authorization Currencies & 16 Settlement Currencies
-* 150+ Local Payment Methods Worldwide
-* Account Updater
-* Inbuilt Fraud Prevention Rules
-* 3D Secure, AVS and CVV Checks
-* 260+ Global Enterprise Fraud Rules
+- Minimize PCI compliance requirements with Hosted Payment Solutions
+- 140+ Authorization Currencies & 16 Settlement Currencies
+- 150+ Local Payment Methods Worldwide
+- Account Updater
+- Inbuilt Fraud Prevention Rules
+- 3D Secure, AVS and CVV Checks
+- 260+ Global Enterprise Fraud Rules
 
 ### Card Present (Terminal & POS) Specific
 
-* Secure End-To-End Encryption
+- Secure End-To-End Encryption
 
 ## Requirements
 
-* Node.js
+- Node.js
 
 ## Installation
 

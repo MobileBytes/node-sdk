@@ -11,7 +11,11 @@ export interface RequestOptions {
 
 const DEFAULT_TIMEOUT = 100000;
 
-export type Transport = (url: string, data?: string, options?: RequestOptions) => Promise<string>;
+export type Transport = (
+  url: string,
+  data?: string,
+  options?: RequestOptions,
+) => Promise<string>;
 
 // Node.js transport using native https module
 export const request: Transport = (url, data, options) => {
@@ -24,9 +28,13 @@ export const request: Transport = (url, data, options) => {
       return;
     }
 
-    const headers = (options && options.headers) ? { ...options.headers } : {};
+    const headers = options && options.headers ? { ...options.headers } : {};
 
-    if (data !== undefined && !headers["Content-Length"] && !headers["content-length"]) {
+    if (
+      data !== undefined &&
+      !headers["Content-Length"] &&
+      !headers["content-length"]
+    ) {
       headers["Content-Length"] = Buffer.byteLength(data);
     }
 
@@ -34,7 +42,11 @@ export const request: Transport = (url, data, options) => {
       method: (options && options.method) || "GET",
       headers: headers,
       hostname: parsed.hostname,
-      port: parsed.port ? parseInt(parsed.port, 10) : parsed.protocol === "http:" ? 80 : 443,
+      port: parsed.port
+        ? parseInt(parsed.port, 10)
+        : parsed.protocol === "http:"
+        ? 80
+        : 443,
       path: parsed.pathname + parsed.search,
     };
 
@@ -46,7 +58,9 @@ export const request: Transport = (url, data, options) => {
       res.on("end", () => {
         console.log(`Response: ${responseData}`);
         if (res.statusCode < 200 || res.statusCode >= 300) {
-          reject(new GatewayError(`Unexpected HTTP status code [${res.statusCode}]`));
+          reject(
+            new GatewayError(`Unexpected HTTP status code [${res.statusCode}]`),
+          );
           return;
         }
         resolve(responseData);

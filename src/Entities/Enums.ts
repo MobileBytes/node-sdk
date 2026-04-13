@@ -54,7 +54,7 @@ export enum PaxEntryMethod {
   Swipe = "SWIPE",
   Chip = "CHIP",
   Manual = "MANUAL",
-  Contactless = 'CONTACTLESS',
+  Contactless = "CONTACTLESS",
 }
 
 export enum ExceptionCodes {
@@ -255,5 +255,5 @@ export enum TransactionType {
 }
 
 export enum cardTypeCode {
-  Mastercard='02'
+  Mastercard = "02",
 }

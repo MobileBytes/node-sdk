@@ -159,7 +159,11 @@ test.only("credit auth mobile - apple pay", async (t) => {
   );
 
   t.truthy(incorrectHashError);
-  t.is(incorrectHashError.responseCode, "505", incorrectHashError.responseMessage);
+  t.is(
+    incorrectHashError.responseCode,
+    "505",
+    incorrectHashError.responseMessage,
+  );
 
   const cannotDecryptError = await t.throws(
     encryptedCard
@@ -171,7 +175,11 @@ test.only("credit auth mobile - apple pay", async (t) => {
   );
 
   t.truthy(cannotDecryptError);
-  t.is(cannotDecryptError.responseCode, "515", cannotDecryptError.responseMessage);
+  t.is(
+    cannotDecryptError.responseCode,
+    "515",
+    cannotDecryptError.responseMessage,
+  );
 });
 
 test.only("credit auth mobile - google pay", async (t) => {
@@ -192,7 +200,11 @@ test.only("credit auth mobile - google pay", async (t) => {
   );
 
   t.truthy(missingAmountError);
-  t.is(missingAmountError.responseCode, "502", missingAmountError.responseMessage);
+  t.is(
+    missingAmountError.responseCode,
+    "502",
+    missingAmountError.responseMessage,
+  );
 
   const invalidTokenError = await t.throws(
     encryptedCard
@@ -205,5 +217,9 @@ test.only("credit auth mobile - google pay", async (t) => {
   );
 
   t.truthy(invalidTokenError);
-  t.is(invalidTokenError.responseCode, "509", invalidTokenError.responseMessage);
+  t.is(
+    invalidTokenError.responseCode,
+    "509",
+    invalidTokenError.responseMessage,
+  );
 });

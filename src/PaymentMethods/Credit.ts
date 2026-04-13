@@ -19,7 +19,8 @@ import {
 import { PaymentMethod } from "./PaymentMethod";
 
 export abstract class Credit extends PaymentMethod
-  implements IEncryptable,
+  implements
+    IEncryptable,
     ITokenizable,
     IChargable,
     IAuthable,

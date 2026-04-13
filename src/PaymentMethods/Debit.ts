@@ -15,7 +15,8 @@ import {
 import { PaymentMethod } from "./PaymentMethod";
 
 export abstract class Debit extends PaymentMethod
-  implements IChargable,
+  implements
+    IChargable,
     IEncryptable,
     IRefundable,
     IReversable,

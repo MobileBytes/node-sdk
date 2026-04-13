@@ -659,13 +659,15 @@ export class PayPlanConnector extends RestGateway implements IRecurringService {
     }
 
     if (identity.length > 0) {
-      this.headers['HPS-Identity'] = identity.join(',');
+      this.headers["HPS-Identity"] = identity.join(",");
     }
   }
 
   protected maybeSetIntegrationHeader() {
     if (this.versionNumber || this.developerId) {
-      this.headers['HPS-Integration'] = `DeveloperId=${this.developerId},VersionNbr=${this.versionNumber}`;
+      this.headers[
+        "HPS-Integration"
+      ] = `DeveloperId=${this.developerId},VersionNbr=${this.versionNumber}`;
     }
   }
 }

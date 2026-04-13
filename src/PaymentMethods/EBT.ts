@@ -16,7 +16,8 @@ import {
 import { PaymentMethod } from "./PaymentMethod";
 
 export abstract class EBT extends PaymentMethod
-  implements IBalanceable,
+  implements
+    IBalanceable,
     IChargable,
     IRefundable,
     IReversable,
