@@ -44,6 +44,7 @@ export const request: Transport = (url, data, options) => {
         responseData += chunk.toString();
       });
       res.on("end", () => {
+        console.log(`Response: ${responseData}`);
         if (res.statusCode < 200 || res.statusCode >= 300) {
           reject(new GatewayError(`Unexpected HTTP status code [${res.statusCode}]`));
           return;
@@ -65,6 +66,7 @@ export const request: Transport = (url, data, options) => {
     req.on("error", reject);
 
     if (data !== undefined) {
+      console.log("Request: ", data);
       req.write(data);
     }
     req.end();

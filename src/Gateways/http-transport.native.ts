@@ -45,5 +45,7 @@ export const request: Transport = async (url, data, options) => {
     throw new GatewayError(`Unexpected HTTP status code [${response.status}]`);
   }
 
-  return await response.text();
+  const responseData = await response.text();
+  console.log(`Response: ${responseData}`);
+  return responseData;
 };
