@@ -1,4 +1,4 @@
-<a href="https://github.com/globalpayments" target="_blank">
+ <a href="https://github.com/globalpayments" target="_blank">
     <img src="https://globalpayments.github.io/images/globapaymentsLogo.png" alt="Global Payments logo" title="Global Payments" align="right" width="225" />
 </a>
 
