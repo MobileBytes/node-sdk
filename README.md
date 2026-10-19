@@ -1,3 +1,7 @@
+> ⚠️ **This repository is archived.** Development has moved to
+> [globalpayments-internal/posrest-node-sdk](https://github.com/globalpayments-internal/posrest-node-sdk).
+> Please use that repository going forward for new development, issues, and pull requests.
+
 <a href="https://github.com/globalpayments" target="_blank">
     <img src="https://globalpayments.github.io/images/globapaymentsLogo.png" alt="Global Payments logo" title="Global Payments" align="right" width="225" />
 </a>
